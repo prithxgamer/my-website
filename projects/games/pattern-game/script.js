@@ -104,76 +104,155 @@ submitBtn.addEventListener('click', ()=>{
     playFailTone();
     messageEl.textContent = `Wrong — the answer was ${correct}. Try again from level 1.`;
     display.textContent = '😵';
-    // reset after short delay
-    setTimeout(()=>{
-      display.textContent = 'Ready?';
-      startBtn.disabled = false;
-    }, 900);
-  }
-});
+    /* Retro 8-bit music using Web Audio API */
+    function initAudio(){
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioContext;
+    }
 
-// allow Enter key in input to submit
-inputEl.addEventListener('keydown', (e)=>{
-  if (e.key === 'Enter'){
-    e.preventDefault();
-    submitBtn.click();
-  }
-});
+    // Background audio (user-provided track) support.
+    const TRACK_CANDIDATES = ['gameboy-rocker.mp3', 'gameboy-rocker.ogg'];
+    let bgAudio = null; // HTMLAudioElement
+    let bgSource = null; // MediaElementSourceNode
+    let bgGain = null;
 
-/* Retro 8-bit music using Web Audio API */
-function initAudio(){
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  return audioContext;
-}
+    function tryLoadTrack(){
+      // create audio element and try candidates in order
+      return new Promise((resolve) => {
+        let tried = 0;
+        function tryNext(){
+          if (tried >= TRACK_CANDIDATES.length){
+            resolve(false);
+            return;
+          }
+          const name = TRACK_CANDIDATES[tried++];
+          const a = new Audio();
+          a.src = name;
+          a.preload = 'auto';
+          a.loop = true;
+          a.crossOrigin = 'anonymous';
+          // canplaythrough indicates the file is available and decoded enough to play
+          function onCan(){
+            a.removeEventListener('canplaythrough', onCan);
+            a.removeEventListener('error', onErr);
+            bgAudio = a;
+            resolve(true);
+          }
+          function onErr(){
+            a.removeEventListener('canplaythrough', onCan);
+            a.removeEventListener('error', onErr);
+            tryNext();
+          }
+          a.addEventListener('canplaythrough', onCan, {once:true});
+          a.addEventListener('error', onErr, {once:true});
+          // start loading
+          a.load();
+        }
+        tryNext();
+      });
+    }
 
-function playTone(freq, duration, time){
-  const ctx = initAudio();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type = 'square';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.1, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-  osc.start(time);
-  osc.stop(time + duration);
-}
+    async function setupBackgroundTrack(){
+      const ok = await tryLoadTrack();
+      if (!ok) return false;
+      const ctx = initAudio();
+      try{
+        bgSource = ctx.createMediaElementSource(bgAudio);
+        bgGain = ctx.createGain();
+        bgGain.gain.value = 0.55; // reasonable loudness
+        bgSource.connect(bgGain).connect(ctx.destination);
+      } catch(e){
+        // some browsers disallow MediaElementSource until audio is playing; still try fallback
+        console.warn('MediaElementSource setup failed', e);
+      }
+      return true;
+    }
 
-function playRetroMelody(){
-  if (!musicEnabled) return;
-  const ctx = initAudio();
-  const now = ctx.currentTime;
-  const notes = [220, 246, 277, 311, 349, 392, 440];
-  const seq = [2, 4, 5, 4, 2, 0, 1, 2, 0];
-  let time = now;
-  seq.forEach(idx => {
-    playTone(notes[idx], 0.15, time);
-    time += 0.18;
-  });
-}
+    function playBackground(){
+      if (!bgAudio) return false;
+      initAudio();
+      // resume context on user gesture
+      audioContext.resume().catch(()=>{});
+      bgAudio.loop = true;
+      bgAudio.currentTime = 0;
+      bgAudio.play().catch((e)=>{console.warn('Background audio play failed', e);});
+      return true;
+    }
 
-function playSuccessTone(){
-  if (!musicEnabled) return;
-  const ctx = initAudio();
-  const now = ctx.currentTime;
-  playTone(523, 0.1, now);
-  playTone(659, 0.1, now + 0.12);
-  playTone(784, 0.2, now + 0.24);
-}
+    function stopBackground(){
+      if (!bgAudio) return;
+      try{ bgAudio.pause(); bgAudio.currentTime = 0; }catch(e){}
+    }
 
-function playFailTone(){
-  if (!musicEnabled) return;
-  const ctx = initAudio();
-  const now = ctx.currentTime;
-  playTone(200, 0.15, now);
-  playTone(150, 0.25, now + 0.17);
-}
+    // simple synth fallback (kept for short melodies when no file is present)
+    function playTone(freq, duration, time){
+      const ctx = initAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+      osc.start(time);
+      osc.stop(time + duration);
+    }
 
-musicToggle.addEventListener('click', ()=>{
-  musicEnabled = !musicEnabled;
-  musicToggle.textContent = musicEnabled ? '🔊' : '🔇';
-  if (musicEnabled) playRetroMelody();
-});
+    function playRetroMelody(){
+      if (!musicEnabled) return;
+      // if a background track is available and playing, prefer it
+      if (bgAudio){
+        if (bgAudio.paused) playBackground();
+        return;
+      }
+      const ctx = initAudio();
+      const now = ctx.currentTime;
+      const notes = [220, 246, 277, 311, 349, 392, 440, 494];
+      const seq = [2,4,5,4,2,0,1,2,0];
+      let time = now;
+      seq.forEach(idx => {
+        playTone(notes[idx % notes.length], 0.15, time);
+        time += 0.18;
+      });
+    }
+
+    function playSuccessTone(){
+      if (!musicEnabled) return;
+      if (bgAudio) { /* small flourish using synth on top */ }
+      const ctx = initAudio();
+      const now = ctx.currentTime;
+      playTone(523, 0.09, now);
+      playTone(659, 0.09, now + 0.11);
+      playTone(784, 0.16, now + 0.22);
+    }
+
+    function playFailTone(){
+      if (!musicEnabled) return;
+      const ctx = initAudio();
+      const now = ctx.currentTime;
+      playTone(200, 0.14, now);
+      playTone(150, 0.22, now + 0.16);
+    }
+
+    // wire up music toggle: attempt to load the provided track if present, otherwise fallback to synth
+    musicToggle.addEventListener('click', async ()=>{
+      musicEnabled = !musicEnabled;
+      musicToggle.textContent = musicEnabled ? '🔊' : '🔇';
+      if (musicEnabled){
+        // ensure context resumed on click
+        initAudio();
+        await audioContext.resume().catch(()=>{});
+        const loaded = await setupBackgroundTrack();
+        if (loaded){
+          playBackground();
+        } else {
+          // fallback to short melody
+          playRetroMelody();
+        }
+      } else {
+        stopBackground();
+      }
+    });
