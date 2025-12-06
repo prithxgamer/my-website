@@ -1,11 +1,58 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Prithvi's World</title>
         <link href="style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <h1>Welcome to Prithvi's World!</h1>
-        <p>Hey! I’m Prithvi, and I’m 11 years old. I love coding, especially in Python, and creating my own games and projects—like a card game I designed called “Killers Mystery.” I’m really into puzzles, problem-solving, and making things that are both fun and challenging. When I’m not coding, I love gaming, building with Legos, and just exploring new ideas. I also have a sweet spot for cookies (who doesn’t?). I like to keep learning and creating, and I’m always excited to see what I can come up with next!</p>
-        <img src="images/my-pic.jpg" alt="Picture of Prithvi">
+        <header class="site-header">
+            <div class="container header-inner">
+                <h1 class="site-title">Prithvi's World</h1>
+                <nav class="site-nav" aria-label="Main navigation">
+                    <a href="#">Home</a>
+                    <a href="#">Projects</a>
+                    <a href="#">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container">
+            <section class="hero">
+                <div class="hero-text">
+                    <h2>Welcome to Prithvi's World!</h2>
+                    <p>Hey! I’m Prithvi, and I’m 11 years old. I love coding, especially in Python, and creating my own games and projects—like a card game I designed called “Killers Mystery.” I’m really into puzzles, problem-solving, and making things that are both fun and challenging. When I’m not coding, I love gaming, building with Legos, and just exploring new ideas. I also have a sweet spot for cookies (who doesn’t?). I like to keep learning and creating, and I’m always excited to see what I can come up with next!</p>
+                    <p><a class="btn" href="#">See my projects</a></p>
+                </div>
+                <div class="hero-image">
+                    <img src="images/my-pic.jpg" alt="Picture of Prithvi">
+                </div>
+            </section>
+
+            <section class="features">
+                <h3>What I like</h3>
+                <div class="cards">
+                    <article class="card">
+                        <h4>Coding</h4>
+                        <p>Building games and small projects, learning new languages and algorithms.</p>
+                    </article>
+                    <article class="card">
+                        <h4>Games</h4>
+                        <p>Playing and designing games — especially card and puzzle games.</p>
+                    </article>
+                    <article class="card">
+                        <h4>Building</h4>
+                        <p>Legos, crafts, and anything I can build or tinker with.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <p>Made with curiosity and cookies. © Prithvi</p>
+            </div>
+        </footer>
     </body>
 </html>
