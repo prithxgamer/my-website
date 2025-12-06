@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pattern Game — Play</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="site-title" href="../index.html">← Back to Projects</a>
+        <nav class="site-nav" aria-label="Main navigation">
+        </nav>
+      </div>
+    </header>
+    <main class="pg-container">
+      <h1>Pattern Game</h1>
+      <p class="lead">A browser port of the pattern game in your project folder. Memorize the numbers shown and type the full pattern to advance levels. No spaces or extra characters — just the digits.</p>
+
+      <section class="game">
+        <div class="display" id="display">Ready?</div>
+        <div class="controls">
+          <button id="startBtn">Start</button>
+          <input id="answerInput" inputmode="numeric" pattern="[0-9]*" placeholder="Type the pattern" aria-label="Pattern answer">
+          <button id="submitBtn">Submit</button>
+          <button id="musicToggle" title="Toggle music" aria-label="Toggle retro music">🔊</button>
+        </div>
+        <div class="meta">
+          <div id="level">Level: —</div>
+          <div id="message" role="status"></div>
+        </div>
+      </section>
+
+      <section class="about">
+        <h2>About this version</h2>
+        <p>This is a faithful web-friendly port of your original Python game. The rules are the same: a sequence of single-digit numbers is shown one-by-one, then hidden — type the numbers in order to win the level. Each level increases the length and speed slightly.</p>
+        <p><strong>Original source:</strong> <a href="../patter_game.py">patter_game.py</a></p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
