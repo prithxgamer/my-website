@@ -23,11 +23,8 @@ button:active{transform:translateY(0)}
 input{flex:1;padding:.6rem .8rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
 .meta{display:flex;justify-content:space-between;margin-top:.75rem;color:var(--muted)}
 .about{margin-top:1rem;color:var(--muted)}
-
-.upload-row{display:flex;align-items:center;gap:.75rem;margin-top:.8rem}
-.file-upload{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,0.02);padding:.4rem .6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
-.file-upload input{display:none}
-.hint{color:var(--muted);font-size:0.85rem}
+.about a{color:var(--accent);text-decoration:none;transition:color .18s}
+.about a:hover{color:#7dd3fc}
 
 
 @media (max-width:520px){

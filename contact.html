@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact — Prithvi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="site-title">Prithvi's World</h1>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="projects/index.html">Projects</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-section">
+      <h1>Get in Touch</h1>
+      <p class="lead">Have questions, feedback, or ideas? Share them here! You can reach out privately via email or participate in public discussions.</p>
+
+      <div class="contact-wrapper">
+        <!-- Private Email Contact -->
+        <div class="contact-card">
+          <h2>Email (Private)</h2>
+          <p>For private inquiries, feel free to email me directly.</p>
+          <p>
+            <a href="mailto:prithxgamer@gmail.com" class="contact-link">prithxgamer@gmail.com</a>
+          </p>
+          <p class="hint">I typically respond within 24-48 hours.</p>
+        </div>
+
+        <!-- Public Discussions -->
+        <div class="discussion-section">
+          <h2>Public Discussions</h2>
+          <p class="hint-text">Have questions, comments, or improvement ideas? Share them publicly here so everyone can see and engage!</p>
+
+          <div class="discussions-wrapper">
+            <!-- Submit Form -->
+            <div class="discussion-form-card">
+              <h3>Share Your Thoughts</h3>
+              <form id="discussionForm">
+                <div class="form-group">
+                  <label for="category">Category</label>
+                  <select id="category" required>
+                    <option value="">— Choose one —</option>
+                    <option value="questions">Questions</option>
+                    <option value="comments">Comments</option>
+                    <option value="improvements">Improvements</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="name">Name (optional)</label>
+                  <input type="text" id="name" placeholder="Your name or 'Anonymous'">
+                </div>
+
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" placeholder="What's on your mind?" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Post</button>
+              </form>
+            </div>
+
+            <!-- Filter & Display -->
+            <div class="discussions-list-section">
+              <div class="filter-controls">
+                <div class="filter-buttons">
+                  <button class="filter-btn active" data-filter="all">All</button>
+                  <button class="filter-btn" data-filter="questions">Questions</button>
+                  <button class="filter-btn" data-filter="comments">Comments</button>
+                  <button class="filter-btn" data-filter="improvements">Improvements</button>
+                </div>
+              </div>
+
+              <div id="discussionsList" class="discussions-list">
+                <p class="empty-state">No posts yet. Be the first to share!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2025 Prithvi. All rights reserved.</p>
+  </footer>
+
+  <script src="discussions.js"></script>
+</body>
+</html>
