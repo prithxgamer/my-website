@@ -1,0 +1,123 @@
+h1 {
+  color: rgb(255, 0, 0);
+  text-align: center;
+  font-size: 60px
+}
+
+.title {
+  color: gray;
+  text-align: center;
+  font-size: 60px
+}
+
+.title2 {
+  color: gray;
+  text-align: center;
+  font-size: 60px
+}
+
+.title3 {
+  color: gray;
+  text-align: center;
+}
+
+.list1 {
+  border: 4px solid gray;
+  padding: 10px;
+  margin: 0px;
+}
+
+.list2 {
+  border: 4px solid red;
+  padding: 10px;
+  margin: 0px;
+}
+
+
+section.list-2 {
+  border: 4px solid red;
+  padding: 10px;
+  margin: 0px;
+  text-align: center;
+}
+
+section.list-1 {
+  border: 4px solid gray;
+  padding: 10px;
+  margin: 0px;
+}
+
+.list-2 h2 {
+  color: rgb(255, 0, 0);
+  text-align: center;
+  font-size: 30px
+}
+
+.list-1 h2 {
+  color: gray;
+  text-align: center;
+  font-size: 30px
+}
+
+.side-by-side {
+  display: flex;
+}
+
+section {
+  flex: 1;
+  margin: 20px;
+  padding: 20px;
+}
+
+p {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  font-size: 25px
+}
+
+table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #000000; 
+        padding: 10px;
+        text-align: middle; 
+    }
+
+em {
+  font-style: normal;
+  font-weight: bold;
+  color: rgb(255, 0, 0);
+}
+
+nav {
+  display: flex;
+}
+
+a {
+  flex: 1;
+  margin: 10px;
+  padding: 10px;
+  background-color: red;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  text-align: center;
+}
+
+.background {
+  background-color: rgb(138, 138, 138);
+
+}
+
+.background2 {
+  background-color: rgb(251, 0, 0);
+}
+
+.background3 {
+  background-color: gray;
+}
+
+.background4 {
+  background-color: rgb(246, 0, 0);
+}
