@@ -1,0 +1,15 @@
+{
+  "discussions": [
+    {
+      "id": 1704345600000,
+      "category": "questions",
+      "name": "Sample User",
+      "message": "Welcome! This is a sample discussion that appears across all browsers. Post your own questions, comments, or ideas!",
+      "timestamp": "2026-01-04T00:00:00Z",
+      "likes": 0,
+      "unlikes": 0,
+      "replies": []
+    }
+  ],
+  "lastUpdated": "2026-01-04T00:00:00Z"
+}

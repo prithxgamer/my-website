@@ -3,16 +3,30 @@
 const STORAGE_KEY = 'prithvi_discussions';
 const LIKES_KEY = 'prithvi_likes';
 const UNLIKES_KEY = 'prithvi_unlikes';
+const DISCUSSIONS_DATA_FILE = 'discussions-data.json';
 let allDiscussions = [];
 let likedPosts = new Set();
 let unlikedPosts = new Set();
 let currentFilter = 'all';
 
-// Load discussions from localStorage on page load
+// Load discussions from JSON file and localStorage on page load
 function loadDiscussions() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  allDiscussions = stored ? JSON.parse(stored) : [];
+  // First, try to load from the JSON data file (shared across all browsers)
+  fetch(DISCUSSIONS_DATA_FILE)
+    .then(response => response.json())
+    .then(data => {
+      allDiscussions = data.discussions || [];
+      renderDiscussions();
+    })
+    .catch(error => {
+      console.log('Could not load discussions data file, using localStorage');
+      // Fallback to localStorage if file doesn't exist
+      const stored = localStorage.getItem(STORAGE_KEY);
+      allDiscussions = stored ? JSON.parse(stored) : [];
+      renderDiscussions();
+    });
   
+  // Always load user's personal likes/unlikes from localStorage (device-specific)
   const likedStored = localStorage.getItem(LIKES_KEY);
   likedPosts = likedStored ? new Set(JSON.parse(likedStored)) : new Set();
   
@@ -20,9 +34,13 @@ function loadDiscussions() {
   unlikedPosts = unlikedStored ? new Set(JSON.parse(unlikedStored)) : new Set();
 }
 
-// Save discussions to localStorage
+// Save discussions to localStorage and try to update JSON file
 function saveDiscussions() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allDiscussions));
+  
+  // Try to update the JSON file (this requires a backend, but we'll attempt it)
+  // For now, this is logged to help with manual updates
+  console.log('Discussions updated. To sync across all browsers, commit changes to GitHub.');
 }
 
 // Save liked posts to localStorage
@@ -231,10 +249,16 @@ function toggleLike(id) {
     // Like - set to 1
     likedPosts.add(id);
     discussion.likes = 1;
+    // Remove unlike if it's set
+    if (unlikedPosts.has(id)) {
+      unlikedPosts.delete(id);
+      discussion.unlikes = 0;
+    }
   }
   
   saveDiscussions();
   saveLikes();
+  saveUnlikes();
   renderDiscussions();
 }
 
@@ -251,9 +275,15 @@ function toggleUnlike(id) {
     // Add unlike - set to 1
     unlikedPosts.add(id);
     discussion.unlikes = 1;
+    // Remove like if it's set
+    if (likedPosts.has(id)) {
+      likedPosts.delete(id);
+      discussion.likes = 0;
+    }
   }
   
   saveDiscussions();
+  saveLikes();
   saveUnlikes();
   renderDiscussions();
 }
@@ -294,7 +324,7 @@ function escapeHtml(text) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   loadDiscussions();
-  renderDiscussions();
+  // renderDiscussions() is called inside loadDiscussions after fetching data
 
   // Form submission
   const form = document.getElementById('discussionForm');
